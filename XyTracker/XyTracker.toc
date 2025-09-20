@@ -1,0 +1,9 @@
+## Interface: 11402
+## Title: 许愿监视
+## Version: 1.4.0
+## Author: KO工会，角色Pagee、Kbftmgl、Pagff、Fara
+## Notes: 记录许愿和出分，团队频道输入xy+空格+许愿
+## SavedVariables: XyArray, DefaultDKP, XyOnlyMode
+XyTracker.xml
+
+## X-Turtle-Shell-Version: 1716290734

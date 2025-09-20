@@ -1,0 +1,1189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/"
+    xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="XyTracker.lua"/>
+    <!-- 定义输入框模板 -->
+    <EditBox name="XyEditBoxTemplate" autoFocus="false" historyLines="256" virtual="true" >
+        <Size>
+            <AbsDimension x="200" y="26"/>
+        </Size>
+        <TextInsets>
+            <AbsInset  left="0" right="5" />
+        </TextInsets>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentLeft" file="Interface\Common\Common-Input-Border">
+                    <Size>
+                        <AbsDimension x="8" y="26"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="-5" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                    <TexCoords left="0" right="0.0625" top="0" bottom="0.625"/>
+                </Texture>
+                <Texture name="$parentRight" file="Interface\Common\Common-Input-Border">
+                    <Size>
+                        <AbsDimension x="8" y="26"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="RIGHT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                    <TexCoords left="0.9375" right="1.0" top="0" bottom="0.625"/>
+                </Texture>
+                <Texture name="$parentMiddle" file="Interface\Common\Common-Input-Border">
+                    <Size>
+                        <AbsDimension x="10" y="26"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT"/>
+                        <Anchor point="RIGHT" relativeTo="$parentRight" relativePoint="LEFT"/>
+                    </Anchors>
+                    <TexCoords left="0.0625" right="0.9375" top="0" bottom="0.625"/>
+                </Texture>
+            </Layer>
+        </Layers>
+
+        <FontString inherits="ChatFontNormal" />
+
+        <Scripts>
+            <OnShow>
+                self:ClearFocus();
+            </OnShow>
+            <OnEnterPressed>
+                self:ClearFocus();
+            </OnEnterPressed>
+            <OnEscapePressed>
+                self:ClearFocus();
+            </OnEscapePressed>
+        </Scripts>
+    </EditBox>
+    <!-- 定义表头模板 -->
+    <Button name="XyColumnHeaderTemplate" virtual="true">
+        <Size>
+            <AbsDimension x="10" y="24"/>
+        </Size>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentLeft" file="Interface\FriendsFrame\WhoFrame-ColumnTabs">
+                    <Size>
+                        <AbsDimension x="5" y="24"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                    </Anchors>
+                    <TexCoords left="0" right="0.078125" top="0" bottom="0.75"/>
+                </Texture>
+                <Texture name="$parentMiddle" file="Interface\FriendsFrame\WhoFrame-ColumnTabs">
+                    <Size>
+                        <AbsDimension x="53" y="24"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT"/>
+                    </Anchors>
+                    <TexCoords left="0.078125" right="0.90625" top="0" bottom="0.75"/>
+                </Texture>
+                <Texture name="$parentRight" file="Interface\FriendsFrame\WhoFrame-ColumnTabs">
+                    <Size>
+                        <AbsDimension x="4" y="24"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentMiddle" relativePoint="RIGHT"/>
+                    </Anchors>
+                    <TexCoords left="0.90625" right="0.96875" top="0" bottom="0.75"/>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnClick>
+
+            </OnClick>
+        </Scripts>
+        <NormalText inherits="GameFontHighlightSmall">
+            <Anchors>
+                <Anchor point="LEFT">
+                    <Offset>
+                        <AbsDimension x="8" y="0"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </NormalText>
+    </Button>
+    <!-- 定义行模板 -->
+    <Button name="XyListButtonTemplate" virtual="true" hidden="true">
+        <Size>
+            <AbsDimension x="360" y="25"/>
+        </Size>
+        <Layers>
+            <Layer level="BORDER">
+                <!-- 角色名称 -->
+                <FontString name="$parentName" inherits="GameFontNormalSmall" justifyH="LEFT" text="">
+                    <Size>
+                        <AbsDimension x="100" y="14"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="-3"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <!-- 角色职业 -->
+                <FontString name="$parentClass" inherits="GameFontHighlightSmall" justifyH="LEFT" text="">
+                    <Size>
+                        <AbsDimension x="60" y="14"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentName" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <!-- 许愿物品 -->
+                <FontString name="$parentXy" inherits="GameFontHighlightSmall" justifyH="LEFT" text="">
+                    <Size>
+                        <AbsDimension x="135" y="14"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentClass" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <!-- 当前分数 -->
+                <FontString name="$parentDKP" inherits="GameFontHighlightSmall" justifyH="CENTER" text="">
+                    <Size>
+                        <AbsDimension x="40" y="14"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentXy" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parentAddDkp" hidden="false">
+                <Size>
+                    <AbsDimension x="16" y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="$parentDKP" relativePoint="RIGHT">
+                        <Offset>
+                            <AbsDimension x="8" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        getglobal("XyAddMember"):SetText(getglobal("XyFrameListButton"..self:GetParent():GetID().."Name"):GetText());
+                        getglobal("XyAddDkpFramePoint"):SetText("");
+                        XyAddDkpFrame:Show();
+                    </OnClick>
+                </Scripts>
+                <NormalTexture file="Interface\Buttons\UI-PlusButton-Up"/>
+                <DisabledTexture file="Interface\Buttons\UI-PlusButton-Disabled"/>
+                <HighlightTexture file="Interface\Buttons\UI-PlusButton-Up" alphaMode="ADD"/>
+            </Button>
+            <Button name="$parentMinusDkp" hidden="false">
+                <Size>
+                    <AbsDimension x="16" y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="$parentDKP" relativePoint="RIGHT">
+                        <Offset>
+                            <AbsDimension x="24" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        getglobal("XyMinusMember"):SetText(getglobal("XyFrameListButton"..self:GetParent():GetID().."Name"):GetText());
+                        getglobal("XyMinusDkpFramePoint"):SetText("")
+                        XyMinusDkpFrame:Show();
+                    </OnClick>
+                </Scripts>
+                <NormalTexture file="Interface\Buttons\UI-MinusButton-Up"/>
+                <DisabledTexture file="Interface\Buttons\UI-MinusButton-Disabled"/>
+                <HighlightTexture file="Interface\Buttons\UI-MinusButton-Up" alphaMode="ADD"/>
+            </Button>
+        </Frames>
+        <HighlightTexture file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar" alphaMode="ADD" justifyH="LEFT">
+            <Size>
+                <AbsDimension x="360" y="16"/>
+            </Size>
+            <Anchors>
+                <Anchor point="TOP">
+                    <Offset>
+                        <AbsDimension x="0" y="-2"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </HighlightTexture>
+    </Button>
+    <!-- 单人分数增加弹出框 -->
+    <Frame name="XyAddDkpFrame" parent="UIParent" hidden="true" toplevel="true" enableMouse="true" movable="true">
+        <Size>
+            <AbsDimension x="200" y="150"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Backdrop name="$parentBackdrop" bgFile="Interface\TutorialFrame\TutorialFrameBackground"
+                  edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+            <EdgeSize>
+                <AbsDimension val="16"/>
+            </EdgeSize>
+            <TileSize>
+                <AbsDimension val="16"/>
+            </TileSize>
+            <BackgroundInsets>
+                <AbsInset left="3" right="5" top="3" bottom="5"/>
+            </BackgroundInsets>
+        </Backdrop>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="$parentTitle" inherits="GameFontNormal" text="要增加的分数">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeTo="XyAddDkpFrame" relativePoint="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="10" y="-15"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentDkpPoint" inherits="GameFontNormal" text="分数">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeTo="UgkpAddDkpFrame" relativePoint="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="30" y="-65"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="XyAddMember" inherits="GameFontNormal" hidden="true"/>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="$parent">
+                        <Offset>
+                            <AbsDimension x="2" y="2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <EditBox name="XyAddDkpFramePoint" letters="5" numeric="true" inherits="XyEditBoxTemplate">
+                <Size>
+                    <AbsDimension x="100" y="26"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP">
+                        <Offset>
+                            <AbsDimension x="30" y="-60"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnEscapePressed>
+                        getglobal("XyAddDkpFrame"):Hide();
+                    </OnEscapePressed>
+                    <OnEnterPressed>
+                        XyAddDkp();
+                        getglobal("XyAddDkpFrame"):Hide();
+                    </OnEnterPressed>
+                </Scripts>
+            </EditBox>
+            <Button name="XyAddDkpFrameDone" inherits="OptionsButtonTemplate" text="确定">
+                <Anchors>
+                    <Anchor point="BOTTOM">
+                        <Offset>
+                            <AbsDimension x="0" y="20"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        XyAddDkp();
+                        getglobal("XyAddDkpFrame"):Hide();
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                self:RegisterForDrag("LeftButton");
+            </OnLoad>
+            <OnShow>
+                getglobal("XyAddDkpFramePoint"):SetFocus();
+            </OnShow>
+            <OnDragStart>
+                self:StartMoving();
+            </OnDragStart>
+            <OnDragStop>
+                self:StopMovingOrSizing();
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+    <!-- 所有人分数修改弹出框 -->
+            <Frame name="allDKPFrame" parent="UIParent" hidden="true" toplevel="true" enableMouse="true" movable="true">
+                <Size>
+                    <AbsDimension x="200" y="150"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="CENTER"/>
+                </Anchors>
+                <Backdrop name="$parentBackdrop" bgFile="Interface\TutorialFrame\TutorialFrameBackground"
+                        edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+                    <EdgeSize>
+                        <AbsDimension val="16"/>
+                    </EdgeSize>
+                    <TileSize>
+                        <AbsDimension val="16"/>
+                    </TileSize>
+                    <BackgroundInsets>
+                        <AbsInset left="3" right="5" top="3" bottom="5"/>
+                    </BackgroundInsets>
+                </Backdrop>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <FontString name="$parentTitle" inherits="GameFontNormal" text="设置初始化分数">
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativeTo="allDKPFrame" relativePoint="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="10" y="-15"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentDkpPoint" inherits="GameFontNormal" text="分数">
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativeTo="allDKPFrame" relativePoint="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="30" y="-65"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+                        <Anchors>
+                            <Anchor point="TOPRIGHT" relativeTo="$parent">
+                                <Offset>
+                                    <AbsDimension x="2" y="2"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </Button>
+                    <EditBox name="allDKPFrameTXT" letters="5" numeric="true" inherits="XyEditBoxTemplate">
+                        <Size>
+                            <AbsDimension x="100" y="26"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOP">
+                                <Offset>
+                                    <AbsDimension x="30" y="-60"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnEscapePressed>
+                                getglobal("allDKPFrame"):Hide();
+                            </OnEscapePressed>
+                        </Scripts>
+                    </EditBox>
+                    <Button name="XyAddDkpFrameDone" inherits="OptionsButtonTemplate" text="确定">
+                        <Anchors>
+                            <Anchor point="BOTTOM">
+                                <Offset>
+                                    <AbsDimension x="0" y="20"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                NEWDefaultDKP()
+                                getglobal("allDKPFrame"):Hide();
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+                </Frames>
+                <Scripts>
+                    <OnLoad>
+                        self:RegisterForDrag("LeftButton");
+                    </OnLoad>
+                    <OnShow>
+                        getglobal("XyAddDkpFramePoint"):SetFocus();
+                    </OnShow>
+                    <OnDragStart>
+                        self:StartMoving();
+                    </OnDragStart>
+                    <OnDragStop>
+                        self:StopMovingOrSizing();
+                    </OnDragStop>
+                </Scripts>
+            </Frame>
+    <!-- 单人分数扣除弹出框 -->
+    <Frame name="XyMinusDkpFrame" parent="UIParent" hidden="true" toplevel="true" enableMouse="true" movable="true">
+        <Size>
+            <AbsDimension x="200" y="150"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Backdrop name="$parentBackdrop" bgFile="Interface\TutorialFrame\TutorialFrameBackground"
+                  edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+            <EdgeSize>
+                <AbsDimension val="16"/>
+            </EdgeSize>
+            <TileSize>
+                <AbsDimension val="16"/>
+            </TileSize>
+            <BackgroundInsets>
+                <AbsInset left="3" right="5" top="3" bottom="5"/>
+            </BackgroundInsets>
+        </Backdrop>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="$parentTitle" inherits="GameFontNormal" text="要扣除的分数">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeTo="XyMinusDkpFrame" relativePoint="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="10" y="-15"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentDkpPoint" inherits="GameFontNormal" text="分数">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeTo="XyMinusDkpFrame" relativePoint="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="30" y="-65"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="XyMinusMember" inherits="GameFontNormal" hidden="true"/>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="$parent">
+                        <Offset>
+                            <AbsDimension x="2" y="2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <EditBox name="XyMinusDkpFramePoint" letters="5" numeric="true" inherits="XyEditBoxTemplate">
+                <Size>
+                    <AbsDimension x="100" y="26"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP">
+                        <Offset>
+                            <AbsDimension x="30" y="-60"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnEscapePressed>
+                        getglobal("XyMinusDkpFrame"):Hide();
+                    </OnEscapePressed>
+                    <OnEnterPressed>
+                        XyMinusDkp();
+                        getglobal("XyMinusDkpFrame"):Hide();
+                    </OnEnterPressed>
+                </Scripts>
+            </EditBox>
+            <Button name="XyAddDkpFrameDone" inherits="OptionsButtonTemplate" text="确定">
+                <Anchors>
+                    <Anchor point="BOTTOM">
+                        <Offset>
+                            <AbsDimension x="0" y="20"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        XyMinusDkp();
+                        getglobal("XyMinusDkpFrame"):Hide();
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                self:RegisterForDrag("LeftButton");
+            </OnLoad>
+            <OnShow>
+                getglobal("XyMinusDkpFramePoint"):SetFocus();
+            </OnShow>
+            <OnDragStart>
+                self:StartMoving();
+            </OnDragStart>
+            <OnDragStop>
+                self:StopMovingOrSizing();
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+    <Frame name="XyExportFrame" frameStrata="DIALOG" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
+        <Size>
+            <AbsDimension x="500" y="900" />
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <!-- 使用更可靠的纯色背景 -->
+        <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+            <EdgeSize>
+                <AbsDimension val="8"/>
+            </EdgeSize>
+            <TileSize>
+                <AbsDimension val="16"/>
+            </TileSize>
+            <BackgroundInsets>
+                <AbsInset left="4" right="4" top="4" bottom="4"/>
+            </BackgroundInsets>
+        </Backdrop>
+        <Frames>
+            <Button inherits="UIPanelCloseButton" name="$parent_CloseButton">
+                <Anchors>
+                    <Anchor point="TOPRIGHT"/>
+                </Anchors>
+                <Scripts>
+                    <OnClick>self:GetParent():Hide();</OnClick>
+                </Scripts>
+            </Button>
+            <EditBox name="XyExportEdit" multiLine="true" autoFocus="false">
+                <Size>
+                    <AbsDimension x="480" y="480" />
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="10" y="-30" />
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-10" y="10" />
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <FontString inherits="GameFontHighlightSmall"/>
+                <Scripts>
+                    <OnLoad>
+                        self:SetBackdrop(nil); -- 确保EditBox无背景
+                        <!--print("XyExportEdit OnLoad: EditBox backdrop cleared");-->
+                    </OnLoad>
+                </Scripts>
+            </EditBox>
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                self:RegisterForDrag("LeftButton");
+                if self:GetBackdrop() then
+                    self:SetBackdropColor(0, 0, 0, 1.0); -- 纯黑色不透明
+                    self:SetBackdropBorderColor(1, 1, 1, 1.0); -- 白色边框
+                    <!--print("XyExportFrame OnLoad: Backdrop set to", self:GetBackdrop().bgFile or "nil");-->
+                    <!--print("XyExportFrame OnLoad: BackdropColor set to (0, 0, 0, 1.0)");-->
+                else
+                    <!--print("XyExportFrame OnLoad: Backdrop not found!");-->
+                end
+            </OnLoad>
+            <OnShow>
+                self:SetBackdropColor(0, 0, 0, 1.0); -- 强制设置背景
+                self:SetBackdropBorderColor(1, 1, 1, 1.0);
+                <!--print("XyExportFrame OnShow: Frame shown, backdrop color reset to (0, 0, 0, 1.0)");-->
+                -- 额外调试：检查实际背景颜色
+                local r, g, b, a = self:GetBackdropColor();
+                <!--print("XyExportFrame OnShow: Current backdrop color is ("..(r or "nil")..", "..(g or "nil")..", "..(b or "nil")..", "..(a or "nil")..")");-->
+            </OnShow>
+            <OnDragStart>
+                self:StartMoving();
+            </OnDragStart>
+            <OnDragStop>
+                self:StopMovingOrSizing();
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+
+
+    <Frame name="XyButtonFrame" parent="Minimap" enableMouse="true" hidden="false" frameStrata="LOW">
+		<Size>
+			<AbsDimension x="32" y="32"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="Minimap" relativePoint="RIGHT">
+				<Offset>
+					<AbsDimension x="2" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Frames>
+			<Button name="XyButton">
+				<Size>
+					<AbsDimension x="32" y="32"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				
+				<NormalTexture file="Interface\AddOns\XyTracker\Images\gold"/>
+				<PushedTexture file="Interface\AddOns\XyTracker\Images\gold"/>
+				<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+				<Scripts>
+					<OnClick>
+						XyTracker_ShowXyWindow();
+					</OnClick>
+					<OnEnter>
+						GameTooltip_SetDefaultAnchor(GameTooltip, UIParent);
+						GameTooltip:SetText("开启/关闭 许愿监视");
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				self:RegisterEvent("VARIABLES_LOADED");
+			</OnLoad>
+			<OnEvent>
+				XyButton_UpdatePosition();
+			</OnEvent>
+		</Scripts>
+	</Frame>
+    <Frame name="XyTrackerFrame" parent="UIParent" hidden="true" movable="true" enableMouse="True" frameStrata="HIGH">
+        <Size>
+            <AbsDimension x="400" y="500"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+            <Offset>
+                <AbsDimension x="0" y="0"/>
+            </Offset>
+        </Anchors>
+        <Backdrop name="$parentBackdrop" bgFile="Interface\Tooltips\UI-Tooltip  -Background"
+                  edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+            <EdgeSize>
+                <AbsDimension val="16"/>
+            </EdgeSize>
+            <TileSize>
+                <AbsDimension val="32"/>
+            </TileSize>
+            <BackgroundInsets>
+                <AbsInset left="5" right="5" top="5" bottom="5"/>
+            </BackgroundInsets>
+        </Backdrop>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentBackground" file="Interface\TutorialFrame\TutorialFrameBackground" tile="true">
+                    <Size>
+                        <AbsDimension x="100%" y="100%"/> <!-- 自适应容器尺寸 -->
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="BOTTOMRIGHT"/>
+                    </Anchors>
+                    <Color r="0" g="0" b="0" a="0.8"/> <!-- 半透黑色背景，与新版一致 -->
+                </Texture>
+                <FontString name="$parentTitle" inherits="GameFontNormal" text="许愿监视" justifyH="LEFT" justifyV="TOP">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="10" y="-10"/>
+                            </Offset>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT" Point="TOPRIGHT">
+                            <Offset>
+                                <AbsDimension x="-10" y="-30"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentStatusText" inherits="GameFontNormalSmall" text="0 Rolls" justifyH="LEFT"
+                            justifyV="TOP">
+                    <Color r="0.5" g="0.5" b="1.0"/>
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT">
+                            <Offset>
+                                <AbsDimension x="10" y="10"/>
+                            </Offset>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT">
+                            <Offset>
+                                <AbsDimension x="0" y="20"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="autoModeTitle" inherits="GameFontNormal" text="仅xy模式" justifyH="LEFT" justifyV="TOP">
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT">
+                            <Offset>
+                                <AbsDimension x="-15" y="10"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="XyTrackerFrame" relativePoint="TOPRIGHT"/>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        XyTracker_HideXyWindow()
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentStopButton" inherits="UIPanelButtonTemplate" text="停止">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentCloseButton">
+                        <Offset>
+                            <AbsDimension x="-12" y="6"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Size>
+                    <AbsDimension x="59" y="16"/>
+                </Size>
+                <Scripts>
+                    <OnLoad>
+                        getglobal("XyTrackerFrameStopButton"):Hide();
+                    </OnLoad>
+                    <OnClick>
+                        XyTracker_OnStopButtonClick()
+                        getglobal("XyTrackerFrameStopButton"):Hide();
+                        getglobal("XyTrackerFrameStartButton"):Show();
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentStartButton" inherits="UIPanelButtonTemplate" text="开始">
+                <Anchors>
+                    <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentStopButton">
+                        <Offset>
+                            <AbsDimension x="59" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Size>
+                    <AbsDimension x="59" y="16"/>
+                </Size>
+                <Scripts>
+                    <OnClick>
+                        XyTracker_OnStartButtonClick()
+                        getglobal("XyTrackerFrameStartButton"):Hide();
+                        getglobal("XyTrackerFrameStopButton"):Show();
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentResetButton" inherits="UIPanelButtonTemplate" text="重置">
+                <Anchors>
+                    <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentStartButton">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Size>
+                    <AbsDimension x="59" y="16"/>
+                </Size>
+                <Scripts>
+                    <OnClick>
+                        XyTracker_OnClearButtonClick()
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentRefreshButton" inherits="UIPanelButtonTemplate" text="刷新">
+                <Anchors>
+                    <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentResetButton">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Size>
+                    <AbsDimension x="59" y="16"/>
+                </Size>
+                <Scripts>
+                    <OnClick>
+                        XyTracker_OnRefreshButtonClick()
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentChuShiHua_DKP" inherits="UIPanelButtonTemplate" text="初始化DKP">
+                <Anchors>
+                    <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentRefreshButton">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Size>
+                    <AbsDimension x="120" y="16"/>
+                </Size>
+                <Scripts>
+                    <OnClick>
+                        printDefaultDKP()
+                        allDKPFrame:Show();
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <CheckButton name="autoModeButtons" inherits="OptionsCheckButtonTemplate" virtual="true">
+                <HitRectInsets>
+                    <AbsInset left="0" right="0" top="0" bottom="0"/>
+                </HitRectInsets>
+                <Anchors>
+                    <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="autoModeTitle">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Size>
+                    <AbsDimension x="16" y="16"/>
+                </Size>
+                <Scripts>
+                    <OnClick>
+                        autoMode_OnClick(self);
+                    </OnClick>
+                </Scripts>
+            </CheckButton>
+            
+            <Button name="$parentExportButton" inherits="UIPanelButtonTemplate" text="导出许愿">
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeTo="$parentStatusText">
+                        <Offset>
+                            <AbsDimension x="-12" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Size>
+                    <AbsDimension x="100" y="16"/>
+                </Size>
+                <Scripts>
+                    <OnClick>
+                        XyTracker_OnExportButtonClick()
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentAnnounceButton" inherits="UIPanelButtonTemplate" text="通报许愿">
+                <Anchors>
+                    <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentExportButton">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Size>
+                    <AbsDimension x="100" y="16"/>
+                </Size>
+                <Scripts>
+                    <OnClick>
+                        XyTracker_OnAnnounceButtonClick()
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentBroadcastXY" inherits="UIPanelButtonTemplate" text="通告许愿">
+                <Anchors>
+                    <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentAnnounceButton">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Size>
+                    <AbsDimension x="100" y="16"/>
+                </Size>
+                <Scripts>
+                    <OnClick>
+                        notificationXY()
+                    </OnClick>
+                </Scripts>
+            </Button>
+            
+
+            <!-- 表头 -->
+            <Button name="XyFrameColumnHeader1" inherits="XyColumnHeaderTemplate" text="角色名">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyTrackerFrame" relativePoint="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="8" y="-45"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        XySortOptions("name");
+                    </OnClick>
+                    <OnLoad>
+                        WhoFrameColumn_SetWidth(100, self);
+                    </OnLoad>
+                </Scripts>
+            </Button>
+            <Button name="XyFrameColumnHeader2" inherits="XyColumnHeaderTemplate" text="职业">
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="XyFrameColumnHeader1" relativePoint="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-2" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        XySortOptions("class");
+                    </OnClick>
+                    <OnLoad>
+                        WhoFrameColumn_SetWidth(60, self);
+                    </OnLoad>
+                </Scripts>
+            </Button>
+            <Button name="XyFrameColumnHeader3" inherits="XyColumnHeaderTemplate" text="许愿">
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="XyFrameColumnHeader2" relativePoint="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-2" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        XySortOptions("xy");
+                    </OnClick>
+                    <OnLoad>
+                        WhoFrameColumn_SetWidth(135, self);
+                    </OnLoad>
+                </Scripts>
+            </Button>
+            <Button name="XyFrameColumnHeader4" inherits="XyColumnHeaderTemplate" text="分数">
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="XyFrameColumnHeader3" relativePoint="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-2" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        XySortOptions("dkp");
+                    </OnClick>
+                    <OnLoad>
+                        WhoFrameColumn_SetWidth(48, self);
+                    </OnLoad>
+                </Scripts>
+            </Button>
+            <Button name="XyFrameColumnHeader5" inherits="XyColumnHeaderTemplate" text="操作">
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="XyFrameColumnHeader4" relativePoint="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-2" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                    <OnLoad>
+                        WhoFrameColumn_SetWidth(48, self);
+                    </OnLoad>
+                </Scripts>
+            </Button>
+            <!-- 空白列表 -->
+            <Button name="XyFrameListButton1" inherits="XyListButtonTemplate" id="1">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameColumnHeader1" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton2" inherits="XyListButtonTemplate" id="2">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton1" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton3" inherits="XyListButtonTemplate" id="3">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton2" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton4" inherits="XyListButtonTemplate" id="4">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton3" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton5" inherits="XyListButtonTemplate" id="5">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton4" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton6" inherits="XyListButtonTemplate" id="6">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton5" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton7" inherits="XyListButtonTemplate" id="7">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton6" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton8" inherits="XyListButtonTemplate" id="8">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton7" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton9" inherits="XyListButtonTemplate" id="9">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton8" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton10" inherits="XyListButtonTemplate" id="10">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton9" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton11" inherits="XyListButtonTemplate" id="11">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton10" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton12" inherits="XyListButtonTemplate" id="12">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton11" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton13" inherits="XyListButtonTemplate" id="13">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton12" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton14" inherits="XyListButtonTemplate" id="14">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton13" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="XyFrameListButton15" inherits="XyListButtonTemplate" id="15">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="XyFrameListButton14" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <ScrollFrame name="XyListScrollFrame" inherits="FauxScrollFrameTemplate">
+                <Size>
+                    <AbsDimension x="296" y="400"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="XyFrameColumnHeader5" relativePoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-5" y="-8"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnVerticalScroll>
+                        FauxScrollFrame_OnVerticalScroll(25, XyTracker_UpdateList);
+                    </OnVerticalScroll>
+                </Scripts>
+            </ScrollFrame>
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                XyTracker_OnLoad(self)
+            </OnLoad>
+            <OnEvent>
+                XyTracker_OnEvent(event, ...)
+            </OnEvent>
+            <OnDragStart>
+                self:StartMoving();
+            </OnDragStart>
+            <OnDragStop>
+                self:StopMovingOrSizing();
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+</Ui>
