@@ -548,7 +548,7 @@
     </Frame>
     <Frame name="XyExportFrame" frameStrata="DIALOG" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
         <Size>
-            <AbsDimension x="500" y="900" />
+            <AbsDimension x="700" y="900" />
         </Size>
         <Anchors>
             <Anchor point="CENTER"/>
@@ -559,7 +559,7 @@
                 <AbsDimension val="8"/>
             </EdgeSize>
             <TileSize>
-                <AbsDimension val="16"/>
+                <AbsDimension val="20"/>
             </TileSize>
             <BackgroundInsets>
                 <AbsInset left="4" right="4" top="4" bottom="4"/>
@@ -590,7 +590,7 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <FontString inherits="GameFontHighlightSmall"/>
+                <FontString inherits="GameFontHighlightLarge"/>
                 <Scripts>
                     <OnLoad>
                         self:SetBackdrop(nil); -- 确保EditBox无背景
