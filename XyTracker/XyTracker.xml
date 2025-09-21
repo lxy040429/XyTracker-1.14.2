@@ -629,7 +629,7 @@
     </Frame>
 
 
-    <Frame name="XyButtonFrame" parent="Minimap" enableMouse="true" hidden="false" frameStrata="LOW">
+    <Frame name="XyButtonFrame" parent="Minimap" enableMouse="true" hidden="true" frameStrata="LOW">
 		<Size>
 			<AbsDimension x="32" y="32"/>
 		</Size>

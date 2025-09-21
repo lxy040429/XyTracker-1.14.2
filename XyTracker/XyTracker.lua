@@ -106,6 +106,10 @@ function XyTracker_OnLoad(self)
         end
     end
 
+    if XyButtonFrame then
+        XyButtonFrame:Hide()
+    end
+
     -- 注意：不要覆盖 UnitPopup_OnClick 或直接往 UnitPopupMenus 插入元素（1.14 上常导致 taint）
     -- 如果你之前的代码里有 ori_unitpopup1 = UnitPopup_OnClick; UnitPopup_OnClick = ple_unitpopup1
     -- 请删除或注释掉那两行，以避免 UI 受保护路径被污染。
@@ -673,32 +677,80 @@ function XyTracker_OnAnnounceButtonClick()
 end
 
 function XyTracker_OnExportButtonClick()
+    -- 保存当前排序设置
+    local originalMethod = Xy_SortOptions.method
+    local originalItemway = Xy_SortOptions.itemway
+    
+    -- 设置按职业排序（升序）
+    Xy_SortOptions.method = "class"
+    Xy_SortOptions.itemway = "asc"
+    
+    -- 调试：检查 XyArray 数据
     local n = #XyArray
+    --XyTracker_Print("导出许愿：XyArray 长度 = " .. n)
+    for i = 1, n do
+        local class = XyArray[i]["class"] or "未知"
+        local name = XyArray[i]["name"] or "未知"
+        --XyTracker_Print("条目 " .. i .. ": 职业=" .. class .. ", 名字=" .. name)
+    end
+    
+    -- 按职业排序
+    Xy_SortDkp()
+    
+    -- 生成导出内容
     local csvText = ""
     for i = 1, n do
-        local xy = XyArray[i]["xy"]
-        if not xy then
-            xy = ""
-        end
-        csvText = csvText .. XyArray[i]["class"] .. "-" .. XyArray[i]["name"] .. "-" .. xy .. "-当前剩余:[" .. XyArray[i]["dkp"] .. "]分" .. "\n"
+        local xy = XyArray[i]["xy"] or ""
+        local class = XyArray[i]["class"] or "未知"
+        local name = XyArray[i]["name"] or "未知"
+        local dkp = XyArray[i]["dkp"] or 0
+        csvText = csvText .. class .. "-" .. name .. "-" .. xy .. "-当前剩余:[" .. dkp .. "]分" .. "\n"
     end
+    
+    -- 恢复原有排序设置
+    Xy_SortOptions.method = originalMethod
+    Xy_SortOptions.itemway = originalItemway
+    Xy_SortDkp()
+    
+    -- 设置导出框内容
     local frame = getglobal("XyExportFrame")
     local editBox = getglobal("XyExportEdit")
+    
+    -- 调试：检查框架和编辑框
+    if not frame then
+        XyTracker_Print("错误：XyExportFrame 不存在")
+        return
+    end
+    if not editBox then
+        XyTracker_Print("错误：XyExportEdit 不存在")
+        return
+    end
+    
     editBox:SetText(csvText)
-    -- 强制设置背景
-    frame:SetBackdrop({
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-        tile = true,
-        tileSize = 16,
-        edgeSize = 8,
-        insets = { left = 4, right = 4, top = 4, bottom = 4 }
-    })
-    frame:SetBackdropColor(0, 0, 0, 1.0)
-    frame:SetBackdropBorderColor(1, 1, 1, 1.0)
-    print("XyExportFrame: Backdrop set in OnExportButtonClick to Interface\\Tooltips\\UI-Tooltip-Background")
-    local r, g, b, a = frame:GetBackdropColor()
-    print("XyExportFrame: Backdrop color after set is ("..(r or "nil")..", "..(g or "nil")..", "..(b or "nil")..", "..(a or "nil")..")")
+    
+    -- 检查 SetBackdrop 是否可用
+    if frame.SetBackdrop then
+        frame:SetBackdrop({
+            bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+            tile = true,
+            tileSize = 16,
+            edgeSize = 8,
+            insets = { left = 4, right = 4, top = 4, bottom = 4 }
+        })
+        frame:SetBackdropColor(0, 0, 0, 1.0)
+        frame:SetBackdropBorderColor(1, 1, 1, 1.0)
+        --XyTracker_Print("XyExportFrame: Backdrop set in OnExportButtonClick")
+        local r, g, b, a = frame:GetBackdropColor()
+        --XyTracker_Print("XyExportFrame: Backdrop color (" .. (r or "nil") .. ", " .. (g or "nil") .. ", " .. (b or "nil") .. ", " .. (a or "nil") .. ")")
+    else
+        XyTracker_Print("警告：SetBackdrop 方法不可用，跳过背景设置")
+    end
+    
+    -- 调试：检查框架类型
+    local frameType = frame:GetObjectType()
+    --XyTracker_Print("XyExportFrame 类型: " .. (frameType or "未知"))
+    
     frame:Show()
 end
 
@@ -769,7 +821,7 @@ end
 
 function Xy_CompareDkps(a1, a2)
     local method, way = Xy_SortOptions["method"], Xy_SortOptions["itemway"];
-    local c1, c2 = a1[method], a2[method];
+    local c1, c2 = a1[method] or "", a2[method] or "";
     if (way == "asc") then
         return c1 < c2;
     else
